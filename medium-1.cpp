@@ -42,6 +42,9 @@ private:
 
 void read_line_clean(std::ifstream &input_file_stream, std::string &read_line);
 
+RoomList read_room_data(std::ifstream &input_file_stream);
+ReservationList read_reservation_data(std::ifstream &input_file_stream);
+
 int main(int argc, char *argv[]) {
 
     if (argc != 1 + 4) {
@@ -57,6 +60,16 @@ int main(int argc, char *argv[]) {
     std::ifstream input_file_stream;
     input_file_stream.open(input_file_name);
 
+    RoomList room_list = read_room_data(input_file_stream);
+
+    ReservationList reservation_list = read_reservation_data(input_file_stream);
+
+    input_file_stream.close();
+
+    return 0;
+}
+
+RoomList read_room_data(std::ifstream &input_file_stream) {
     std::string read_line;
     read_line_clean(input_file_stream, read_line);
 
@@ -78,9 +91,14 @@ int main(int argc, char *argv[]) {
         room_list.add_room(room_name, price_per_hour);
     }
 
+    return room_list;
+}
+
+ReservationList read_reservation_data(std::ifstream &input_file_stream) {
+    std::string read_line;
     read_line_clean(input_file_stream, read_line);
 
-    input_string_stream.str(read_line);
+    std::istringstream input_string_stream(read_line);
     int number_of_reservations = 0;
     input_string_stream >> number_of_reservations;
 
@@ -101,9 +119,7 @@ int main(int argc, char *argv[]) {
         reservation_list.add_reservation(id, name, reserved_room_name, start_time, end_time);
     }
 
-    input_file_stream.close();
-
-    return 0;
+    return reservation_list;
 }
 
 void read_line_clean(std::ifstream &input_file_stream, std::string &read_line) {

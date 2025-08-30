@@ -11,15 +11,15 @@ void process_cli_arguments(
 
 int main(int argc, char *argv[]) {
 
-    std::string input_file_name;
-    std::string task1_out_file_name;
-    std::string task2_out_file_name;
-    std::string task3_out_file_name;
-
     if (argc != 1 + 4) {
         std::cout << "Exception: should have 4 arguments instead of " << (argc - 1) << std::endl;
         return 0;
     }
+
+    std::string input_file_name;
+    std::string task1_out_file_name;
+    std::string task2_out_file_name;
+    std::string task3_out_file_name;
 
     process_cli_arguments(argv, input_file_name, task1_out_file_name, task2_out_file_name, task3_out_file_name);
 

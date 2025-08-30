@@ -1,0 +1,11 @@
+3                   // room number
+oberoi 800          // room name & price per hour
+falaknuma 4200
+delhi 5100
+6                   // reservation number
+2 nelson oberoi 5 19    // ID, name, reserved room name, start & end time
+0 lowry oberoi 14 16
+3 siniong falaknuma 0 8
+4 jimmy oberoi 1 19
+5 logan falaknuma 1 1
+1 happy oberoi 8 23

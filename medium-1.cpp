@@ -1,44 +1,9 @@
 #include <iostream>
-#include <string>
 #include <fstream>
 #include <sstream>
 
-class RoomList {
-public:
-    RoomList(int number_of_rooms);
-    ~RoomList();
-    void add_room(const std::string &room_name, int price_per_hour);
-private:
-    struct Room {
-        std::string room_name;
-        int price_per_hour;
-    };
-    Room* room_list;
-    int number_of_rooms_added;
-};
-
-class ReservationList {
-public:
-    ReservationList(int number_of_reservations);
-    ~ReservationList();
-    void add_reservation(
-        int id,
-        std::string &name,
-        std::string &reserved_room_name,
-        int start_time,
-        int end_time
-    );
-private:
-    struct Reservation {
-        int id;
-        std::string name;
-        std::string reserved_room_name;
-        int start_time;
-        int end_time;
-    };
-    Reservation* reservation_list;
-    int number_of_reservations_added;
-};
+#include "room_list.h"
+#include "reservation_list.h"
 
 void read_line_clean(std::ifstream &input_file_stream, std::string &read_line);
 
@@ -140,45 +105,4 @@ void read_line_clean(std::ifstream &input_file_stream, std::string &read_line) {
         read_line.erase(last_not_of_space + 1);
     else
         read_line.clear();
-}
-
-RoomList::RoomList(int number_of_rooms) {
-    room_list = new Room[number_of_rooms];
-    number_of_rooms_added = 0;
-}
-
-RoomList::~RoomList() {
-    delete[] room_list;
-}
-
-void RoomList::add_room(const std::string &room_name, int price_per_hour) {
-    room_list[number_of_rooms_added].room_name = room_name;
-    room_list[number_of_rooms_added].price_per_hour = price_per_hour;
-
-    number_of_rooms_added++;
-}
-
-ReservationList::ReservationList(int number_of_reservations) {
-    reservation_list = new Reservation[number_of_reservations];
-    number_of_reservations_added = 0;
-}
-
-ReservationList::~ReservationList() {
-    delete[] reservation_list;
-}
-
-void ReservationList::add_reservation(
-        int id,
-        std::string &name,
-        std::string &reserved_room_name,
-        int start_time,
-        int end_time
-) {
-    reservation_list[number_of_reservations_added].id = id;
-    reservation_list[number_of_reservations_added].name = name;
-    reservation_list[number_of_reservations_added].reserved_room_name = reserved_room_name;
-    reservation_list[number_of_reservations_added].start_time = start_time;
-    reservation_list[number_of_reservations_added].end_time = end_time;
-
-    number_of_reservations_added++;
 }

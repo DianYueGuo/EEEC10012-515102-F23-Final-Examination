@@ -5,8 +5,8 @@
 
 ReservationList::ReservationList(int number_of_reservations) {
     reservation_list = new Reservation[number_of_reservations];
-    ordered_reservation_order_number_list = new int[number_of_reservations];
-    valid_reservation_order_number_list_index_list = new int[number_of_reservations];
+    ordered_reservation_list = new Reservation*[number_of_reservations];
+    valid_reservation_list = new Reservation*[number_of_reservations];
     total_number_of_reservations = number_of_reservations;
     number_of_reservations_added = 0;
     number_of_valid_reservations = 0;
@@ -14,24 +14,26 @@ ReservationList::ReservationList(int number_of_reservations) {
 
 ReservationList::~ReservationList() {
     delete[] reservation_list;
-    delete[] ordered_reservation_order_number_list;
-    delete[] valid_reservation_order_number_list_index_list;
+    delete[] ordered_reservation_list;
+    delete[] valid_reservation_list;
 }
 
 void ReservationList::add_reservation(
+        int order_number,
         int id,
         std::string &name,
         std::string &reserved_room_name,
         int start_time,
         int end_time
 ) {
+    reservation_list[number_of_reservations_added].order_number = order_number;
     reservation_list[number_of_reservations_added].id = id;
     reservation_list[number_of_reservations_added].name = name;
     reservation_list[number_of_reservations_added].reserved_room_name = reserved_room_name;
     reservation_list[number_of_reservations_added].start_time = start_time;
     reservation_list[number_of_reservations_added].end_time = end_time;
 
-    ordered_reservation_order_number_list[number_of_reservations_added] = number_of_reservations_added + 1;
+    ordered_reservation_list[number_of_reservations_added] = &reservation_list[number_of_reservations_added];
 
     number_of_reservations_added++;
 }
@@ -58,10 +60,10 @@ std::string ReservationList::get_reservation_string(int reservation_order_number
 
 void ReservationList::sort_ordered_reservation_order_number_list() const {
     std::sort(
-        ordered_reservation_order_number_list,
-        ordered_reservation_order_number_list + number_of_reservations_added,
-        [this](const int &first_reservation_order_number, const int &second_reservation_order_number) {
-            return reservation_list[first_reservation_order_number - 1].id < reservation_list[second_reservation_order_number - 1].id;
+        ordered_reservation_list,
+        ordered_reservation_list + number_of_reservations_added,
+        [](const Reservation* first_reservation, const Reservation* second_reservation) {
+            return first_reservation->id < second_reservation->id;
         }
     );
 }
@@ -69,23 +71,23 @@ void ReservationList::sort_ordered_reservation_order_number_list() const {
 std::string ReservationList::get_reservation_string_sorted(int reservation_sorted_order_number) const {
     sort_ordered_reservation_order_number_list();
 
-    return get_reservation_string(ordered_reservation_order_number_list[reservation_sorted_order_number - 1]);
+    return get_reservation_string(ordered_reservation_list[reservation_sorted_order_number - 1]->order_number);
 }
 
 std::string ReservationList::get_valid_reservation_string_sorted(int valid_reservation_sorted_order_number) const {
-    return get_reservation_string_sorted(valid_reservation_order_number_list_index_list[valid_reservation_sorted_order_number - 1] + 1);
+    return get_reservation_string(valid_reservation_list[valid_reservation_sorted_order_number - 1]->order_number);
 }
 
 std::string ReservationList::get_room_name_sorted(int reservation_sorted_order_number) const {
     sort_ordered_reservation_order_number_list();
 
-    return reservation_list[ordered_reservation_order_number_list[reservation_sorted_order_number - 1] - 1].reserved_room_name;
+    return ordered_reservation_list[reservation_sorted_order_number - 1]->reserved_room_name;
 }
 
 std::string ReservationList::get_roomer_name_sorted(int reservation_sorted_order_number) const {
     sort_ordered_reservation_order_number_list();
 
-    return reservation_list[ordered_reservation_order_number_list[reservation_sorted_order_number - 1] - 1].name;
+    return ordered_reservation_list[reservation_sorted_order_number - 1]->name;
 }
 
 void ReservationList::process_reservation_validity() {
@@ -95,25 +97,21 @@ void ReservationList::process_reservation_validity() {
         reservation_sorted_order_number++
     ) {
         if (is_reservation_valid(reservation_sorted_order_number)) {
-            valid_reservation_order_number_list_index_list[number_of_valid_reservations] = reservation_sorted_order_number - 1;
+            valid_reservation_list[number_of_valid_reservations] = ordered_reservation_list[reservation_sorted_order_number - 1];
             number_of_valid_reservations++;
         }
     }
 }
 
 bool ReservationList::is_reservation_valid(int reservation_sorted_order_number) const {
-    Reservation &reservation_in_question = reservation_list[ordered_reservation_order_number_list[reservation_sorted_order_number - 1] - 1];
+    Reservation &reservation_in_question = *ordered_reservation_list[reservation_sorted_order_number - 1];
 
     for (
         int valid_reservation_sorted_order_number = 1;
         valid_reservation_sorted_order_number <= number_of_valid_reservations;
         valid_reservation_sorted_order_number++
     ) {
-        Reservation &already_valid_reservation = reservation_list[
-            ordered_reservation_order_number_list[
-                valid_reservation_order_number_list_index_list[valid_reservation_sorted_order_number - 1]
-            ] - 1
-        ];
+        Reservation &already_valid_reservation = *valid_reservation_list[valid_reservation_sorted_order_number - 1];
 
         if (
             reservation_in_question.reserved_room_name.compare(

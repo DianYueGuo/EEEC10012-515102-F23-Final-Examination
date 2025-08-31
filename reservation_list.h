@@ -8,6 +8,7 @@ public:
     ReservationList(int number_of_reservations);
     ~ReservationList();
     void add_reservation(
+        int order_number,
         int id,
         std::string &name,
         std::string &reserved_room_name,
@@ -24,6 +25,7 @@ public:
     int get_total_number_of_valid_reservations() const;
 private:
     struct Reservation {
+        int order_number;
         int id;
         std::string name;
         std::string reserved_room_name;
@@ -31,8 +33,8 @@ private:
         int end_time;
     };
     Reservation* reservation_list;
-    int* ordered_reservation_order_number_list;
-    int* valid_reservation_order_number_list_index_list;
+    Reservation** ordered_reservation_list;
+    Reservation** valid_reservation_list;
     int total_number_of_reservations;
     int number_of_reservations_added;
     int number_of_valid_reservations;

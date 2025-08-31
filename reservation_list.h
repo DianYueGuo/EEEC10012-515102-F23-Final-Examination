@@ -15,7 +15,7 @@ public:
         int end_time
     );
     std::string get_reservation_string(int reservation_order_number);
-    int get_number_of_reservations_added();
+    int get_total_number_of_reservations();
 private:
     struct Reservation {
         int id;
@@ -25,6 +25,7 @@ private:
         int end_time;
     };
     Reservation* reservation_list;
+    int total_number_of_reservations;
     int number_of_reservations_added;
 };
 

@@ -7,8 +7,10 @@
 
 void read_line_clean(std::ifstream &input_file_stream, std::string &read_line);
 
-RoomList read_room_data(std::ifstream &input_file_stream);
-ReservationList read_reservation_data(std::ifstream &input_file_stream);
+void read_number_of_rooms(std::ifstream &input_file_stream, int &number_of_rooms);
+void read_room_data(std::ifstream &input_file_stream, RoomList &room_list);
+void read_number_of_reservations(std::ifstream &input_file_stream, int &number_of_reservations);
+void read_reservation_data(std::ifstream &input_file_stream, ReservationList &reservation_list);
 
 int main(int argc, char *argv[]) {
 
@@ -25,9 +27,19 @@ int main(int argc, char *argv[]) {
     std::ifstream input_file_stream;
     input_file_stream.open(input_file_name);
 
-    RoomList room_list = read_room_data(input_file_stream);
+    int number_of_rooms = 0;
+    read_number_of_rooms(input_file_stream, number_of_rooms);
 
-    ReservationList reservation_list = read_reservation_data(input_file_stream);
+    RoomList room_list(number_of_rooms);
+
+    read_room_data(input_file_stream, room_list);
+
+    int number_of_reservations = 0;
+    read_number_of_reservations(input_file_stream, number_of_reservations);
+
+    ReservationList reservation_list(number_of_reservations);
+
+    read_reservation_data(input_file_stream, reservation_list);
 
     input_file_stream.close();
 
@@ -36,7 +48,7 @@ int main(int argc, char *argv[]) {
 
     output_file_stream << "Reservation Information: " << std::endl;
 
-    for (int reservation_order_number = 1; reservation_order_number <= reservation_list.get_number_of_reservations_added(); reservation_order_number++) {
+    for (int reservation_order_number = 1; reservation_order_number <= reservation_list.get_total_number_of_reservations(); reservation_order_number++) {
         output_file_stream << reservation_list.get_reservation_string(reservation_order_number) << std::endl;
     }
 
@@ -45,19 +57,19 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
-RoomList read_room_data(std::ifstream &input_file_stream) {
+void read_number_of_rooms(std::ifstream &input_file_stream, int &number_of_rooms) {
     std::string read_line;
     read_line_clean(input_file_stream, read_line);
 
     std::istringstream input_string_stream(read_line);
-    int number_of_rooms = 0;
     input_string_stream >> number_of_rooms;
+}
 
-    RoomList room_list(number_of_rooms);
-
-    for (int room_order_number = 1; room_order_number <= number_of_rooms; room_order_number++) {
+void read_room_data(std::ifstream &input_file_stream, RoomList &room_list) {
+    for (int room_order_number = 1; room_order_number <= room_list.get_total_number_of_rooms(); room_order_number++) {
+        std::string read_line;
         read_line_clean(input_file_stream, read_line);
-        input_string_stream.str(read_line);
+        std::istringstream input_string_stream(read_line);
 
         std::string room_name;
         int price_per_hour;
@@ -66,23 +78,21 @@ RoomList read_room_data(std::ifstream &input_file_stream) {
 
         room_list.add_room(room_name, price_per_hour);
     }
-
-    return room_list;
 }
 
-ReservationList read_reservation_data(std::ifstream &input_file_stream) {
+void read_number_of_reservations(std::ifstream &input_file_stream, int &number_of_reservations) {
     std::string read_line;
     read_line_clean(input_file_stream, read_line);
 
     std::istringstream input_string_stream(read_line);
-    int number_of_reservations = 0;
     input_string_stream >> number_of_reservations;
+}
 
-    ReservationList reservation_list(number_of_reservations);
-
-    for (int reservation_order_number = 1; reservation_order_number <= number_of_reservations; reservation_order_number++) {
+void read_reservation_data(std::ifstream &input_file_stream, ReservationList &reservation_list) {
+    for (int reservation_order_number = 1; reservation_order_number <= reservation_list.get_total_number_of_reservations(); reservation_order_number++) {
+        std::string read_line;
         read_line_clean(input_file_stream, read_line);
-        input_string_stream.str(read_line);
+        std::istringstream input_string_stream(read_line);
 
         int id;
         std::string name;
@@ -94,8 +104,6 @@ ReservationList read_reservation_data(std::ifstream &input_file_stream) {
 
         reservation_list.add_reservation(id, name, reserved_room_name, start_time, end_time);
     }
-
-    return reservation_list;
 }
 
 void read_line_clean(std::ifstream &input_file_stream, std::string &read_line) {

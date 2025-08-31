@@ -4,6 +4,7 @@
 
 ReservationList::ReservationList(int number_of_reservations) {
     reservation_list = new Reservation[number_of_reservations];
+    total_number_of_reservations = number_of_reservations;
     number_of_reservations_added = 0;
 }
 
@@ -27,8 +28,8 @@ void ReservationList::add_reservation(
     number_of_reservations_added++;
 }
 
-int ReservationList::get_number_of_reservations_added() {
-    return number_of_reservations_added;
+int ReservationList::get_total_number_of_reservations() {
+    return total_number_of_reservations;
 }
 
 std::string ReservationList::get_reservation_string(int reservation_order_number) {

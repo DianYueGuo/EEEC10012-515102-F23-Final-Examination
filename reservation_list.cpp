@@ -6,13 +6,16 @@
 ReservationList::ReservationList(int number_of_reservations) {
     reservation_list = new Reservation[number_of_reservations];
     ordered_reservation_order_number_list = new int[number_of_reservations];
+    valid_reservation_order_number_list_index_list = new int[number_of_reservations];
     total_number_of_reservations = number_of_reservations;
     number_of_reservations_added = 0;
+    number_of_valid_reservations = 0;
 }
 
 ReservationList::~ReservationList() {
     delete[] reservation_list;
     delete[] ordered_reservation_order_number_list;
+    delete[] valid_reservation_order_number_list_index_list;
 }
 
 void ReservationList::add_reservation(
@@ -69,6 +72,10 @@ std::string ReservationList::get_reservation_string_sorted(int reservation_sorte
     return get_reservation_string(ordered_reservation_order_number_list[reservation_sorted_order_number - 1]);
 }
 
+std::string ReservationList::get_valid_reservation_string_sorted(int valid_reservation_sorted_order_number) const {
+    return get_reservation_string_sorted(valid_reservation_order_number_list_index_list[valid_reservation_sorted_order_number - 1] + 1);
+}
+
 std::string ReservationList::get_room_name_sorted(int reservation_sorted_order_number) const {
     sort_ordered_reservation_order_number_list();
 
@@ -79,4 +86,63 @@ std::string ReservationList::get_roomer_name_sorted(int reservation_sorted_order
     sort_ordered_reservation_order_number_list();
 
     return reservation_list[ordered_reservation_order_number_list[reservation_sorted_order_number - 1] - 1].name;
+}
+
+void ReservationList::process_reservation_validity() {
+    for (
+        int reservation_sorted_order_number = 1;
+        reservation_sorted_order_number <= total_number_of_reservations;
+        reservation_sorted_order_number++
+    ) {
+        if (is_reservation_valid(reservation_sorted_order_number)) {
+            valid_reservation_order_number_list_index_list[number_of_valid_reservations] = reservation_sorted_order_number - 1;
+            number_of_valid_reservations++;
+        }
+    }
+}
+
+bool ReservationList::is_reservation_valid(int reservation_sorted_order_number) const {
+    Reservation &reservation_in_question = reservation_list[ordered_reservation_order_number_list[reservation_sorted_order_number - 1] - 1];
+
+    for (
+        int valid_reservation_sorted_order_number = 1;
+        valid_reservation_sorted_order_number <= number_of_valid_reservations;
+        valid_reservation_sorted_order_number++
+    ) {
+        Reservation &already_valid_reservation = reservation_list[
+            ordered_reservation_order_number_list[
+                valid_reservation_order_number_list_index_list[valid_reservation_sorted_order_number - 1]
+            ] - 1
+        ];
+
+        if (
+            reservation_in_question.reserved_room_name.compare(
+                already_valid_reservation.reserved_room_name
+            ) != 0
+        ) {
+            continue;
+        }
+
+        if (do_reservation_have_overlap(reservation_in_question, reservation_in_question)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool ReservationList::do_reservation_have_overlap(Reservation &reservation_1, Reservation &reservation_2) const {
+    if (reservation_1.start_time < reservation_2.start_time && reservation_1.end_time < reservation_2.start_time ) {
+        return false;
+    }
+
+    if (reservation_2.start_time < reservation_1.start_time && reservation_2.end_time < reservation_1.start_time ) {
+        return false;
+    }
+
+    return true;
+}
+
+int ReservationList::get_total_number_of_valid_reservations() const {
+    return number_of_valid_reservations;
 }

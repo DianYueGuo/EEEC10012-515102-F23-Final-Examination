@@ -50,6 +50,23 @@ int main(int argc, char *argv[]) {
 
     output_task2_file(task2_out_file_name, reservation_list, room_list);
 
+    std::ofstream output_file_stream;
+    output_file_stream.open(task3_out_file_name);
+
+    output_file_stream << "Reservation Information: " << std::endl;
+
+    reservation_list.process_reservation_validity();
+
+    for (
+        int valid_reservation_sorted_order_number = 1;
+        valid_reservation_sorted_order_number <= reservation_list.get_total_number_of_valid_reservations();
+        valid_reservation_sorted_order_number++
+    ) {
+        output_file_stream << reservation_list.get_valid_reservation_string_sorted(valid_reservation_sorted_order_number) << std::endl;
+    }
+
+    output_file_stream.close();
+
     return 0;
 }
 

@@ -47,3 +47,13 @@ std::string RoomList::get_room_string(int room_order_number, const ReservationLi
 
     return output_string_stream.str();
 }
+
+int RoomList::get_price_per_hour(const std::string room_name) const {
+    for (int room_list_index = 0; room_list_index < number_of_rooms_added; room_list_index++) {
+        if (room_name.compare(room_list[room_list_index].room_name) == 0) {
+            return room_list[room_list_index].price_per_hour;
+        }
+    }
+
+    return 0;
+}

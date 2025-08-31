@@ -2,6 +2,9 @@
 #define RESERVATION_LIST_H
 
 #include <string>
+#include "room_list.h"
+
+class RoomList;
 
 class ReservationList {
 public:
@@ -15,9 +18,9 @@ public:
         int start_time,
         int end_time
     );
-    std::string get_reservation_string(int reservation_order_number) const;
-    std::string get_reservation_string_sorted(int reservation_sorted_order_number) const;
-    std::string get_valid_reservation_string_sorted(int valid_reservation_sorted_order_number) const;
+    std::string get_reservation_string(int reservation_order_number, const RoomList &room_list, bool does_calculate_total_cost = false) const;
+    std::string get_reservation_string_sorted(int reservation_sorted_order_number, const RoomList &room_list) const;
+    std::string get_valid_reservation_string_sorted(int valid_reservation_sorted_order_number, const RoomList &room_list) const;
     std::string get_room_name_sorted(int reservation_sorted_order_number) const;
     std::string get_roomer_name_sorted(int reservation_sorted_order_number) const;
     void process_reservation_validity();

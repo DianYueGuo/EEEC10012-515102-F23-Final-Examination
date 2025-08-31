@@ -15,6 +15,7 @@ public:
         int end_time
     );
     std::string get_reservation_string(int reservation_order_number) const;
+    std::string get_reservation_string_sorted(int reservation_sorted_order_number) const;
     int get_total_number_of_reservations() const;
 private:
     struct Reservation {
@@ -25,8 +26,10 @@ private:
         int end_time;
     };
     Reservation* reservation_list;
+    int* ordered_reservation_order_number_list;
     int total_number_of_reservations;
     int number_of_reservations_added;
+    bool is_first_id_smaller(const int &first_reservation_order_number, const int &second_reservation_order_number) const;
 };
 
 #endif

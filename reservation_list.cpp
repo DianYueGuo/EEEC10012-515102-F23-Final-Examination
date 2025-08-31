@@ -1,15 +1,18 @@
 #include "reservation_list.h"
 
 #include <sstream>
+#include <algorithm>
 
 ReservationList::ReservationList(int number_of_reservations) {
     reservation_list = new Reservation[number_of_reservations];
+    ordered_reservation_order_number_list = new int[number_of_reservations];
     total_number_of_reservations = number_of_reservations;
     number_of_reservations_added = 0;
 }
 
 ReservationList::~ReservationList() {
     delete[] reservation_list;
+    delete[] ordered_reservation_order_number_list;
 }
 
 void ReservationList::add_reservation(
@@ -24,6 +27,8 @@ void ReservationList::add_reservation(
     reservation_list[number_of_reservations_added].reserved_room_name = reserved_room_name;
     reservation_list[number_of_reservations_added].start_time = start_time;
     reservation_list[number_of_reservations_added].end_time = end_time;
+
+    ordered_reservation_order_number_list[number_of_reservations_added] = number_of_reservations_added + 1;
 
     number_of_reservations_added++;
 }
@@ -46,4 +51,16 @@ std::string ReservationList::get_reservation_string(int reservation_order_number
                          << "Total Cost: " << 0;
 
     return output_string_stream.str();
+}
+
+std::string ReservationList::get_reservation_string_sorted(int reservation_sorted_order_number) const {
+    std::sort(
+        ordered_reservation_order_number_list,
+        ordered_reservation_order_number_list + number_of_reservations_added,
+        [this](const int &first_reservation_order_number, const int &second_reservation_order_number) {
+            return reservation_list[first_reservation_order_number - 1].id < reservation_list[second_reservation_order_number - 1].id;
+        }
+    );
+
+    return get_reservation_string(ordered_reservation_order_number_list[reservation_sorted_order_number - 1]);
 }

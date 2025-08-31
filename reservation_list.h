@@ -29,7 +29,6 @@ private:
     int* ordered_reservation_order_number_list;
     int total_number_of_reservations;
     int number_of_reservations_added;
-    bool is_first_id_smaller(const int &first_reservation_order_number, const int &second_reservation_order_number) const;
 };
 
 #endif

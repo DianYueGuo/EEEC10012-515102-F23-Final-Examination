@@ -8,7 +8,7 @@ public:
     RoomList(int number_of_rooms);
     ~RoomList();
     void add_room(const std::string &room_name, int price_per_hour);
-    int get_total_number_of_rooms();
+    int get_total_number_of_rooms() const;
 private:
     struct Room {
         std::string room_name;

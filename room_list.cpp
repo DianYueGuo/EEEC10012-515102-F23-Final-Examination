@@ -17,6 +17,6 @@ void RoomList::add_room(const std::string &room_name, int price_per_hour) {
     number_of_rooms_added++;
 }
 
-int RoomList::get_total_number_of_rooms() {
+int RoomList::get_total_number_of_rooms() const{
     return total_number_of_rooms;
 }

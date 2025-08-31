@@ -31,6 +31,17 @@ int main(int argc, char *argv[]) {
 
     input_file_stream.close();
 
+    std::ofstream output_file_stream;
+    output_file_stream.open(task1_out_file_name);
+
+    output_file_stream << "Reservation Information: " << std::endl;
+
+    for (int reservation_order_number = 1; reservation_order_number <= reservation_list.get_number_of_reservations_added(); reservation_order_number++) {
+        output_file_stream << reservation_list.get_reservation_string(reservation_order_number) << std::endl;
+    }
+
+    output_file_stream.close();
+
     return 0;
 }
 
@@ -44,7 +55,7 @@ RoomList read_room_data(std::ifstream &input_file_stream) {
 
     RoomList room_list(number_of_rooms);
 
-    for (int room_number = 1; room_number <= number_of_rooms; room_number++) {
+    for (int room_order_number = 1; room_order_number <= number_of_rooms; room_order_number++) {
         read_line_clean(input_file_stream, read_line);
         input_string_stream.str(read_line);
 
@@ -69,7 +80,7 @@ ReservationList read_reservation_data(std::ifstream &input_file_stream) {
 
     ReservationList reservation_list(number_of_reservations);
 
-    for (int reservation_number = 1; reservation_number <= number_of_reservations; reservation_number++) {
+    for (int reservation_order_number = 1; reservation_order_number <= number_of_reservations; reservation_order_number++) {
         read_line_clean(input_file_stream, read_line);
         input_string_stream.str(read_line);
 

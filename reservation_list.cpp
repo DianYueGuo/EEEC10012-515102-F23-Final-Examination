@@ -1,5 +1,7 @@
 #include "reservation_list.h"
 
+#include <sstream>
+
 ReservationList::ReservationList(int number_of_reservations) {
     reservation_list = new Reservation[number_of_reservations];
     number_of_reservations_added = 0;
@@ -23,4 +25,24 @@ void ReservationList::add_reservation(
     reservation_list[number_of_reservations_added].end_time = end_time;
 
     number_of_reservations_added++;
+}
+
+int ReservationList::get_number_of_reservations_added() {
+    return number_of_reservations_added;
+}
+
+std::string ReservationList::get_reservation_string(int reservation_order_number) {
+    std::ostringstream output_string_stream;
+
+    output_string_stream << "Id: " << reservation_list[reservation_order_number - 1].id << ", "
+                         << "Name: " << reservation_list[reservation_order_number - 1].name << ", "
+                         << "Room: " << reservation_list[reservation_order_number - 1].reserved_room_name << ", "
+                         << "Start: " << reservation_list[reservation_order_number - 1].start_time << ", "
+                         << "End: " << reservation_list[reservation_order_number - 1].end_time << ", "
+                         << "Duration: "
+                         << (reservation_list[reservation_order_number - 1].end_time - reservation_list[reservation_order_number - 1].start_time)
+                         << "hr, "
+                         << "Total Cost: " << 0;
+
+    return output_string_stream.str();
 }

@@ -28,11 +28,11 @@ void ReservationList::add_reservation(
     number_of_reservations_added++;
 }
 
-int ReservationList::get_total_number_of_reservations() {
+int ReservationList::get_total_number_of_reservations() const {
     return total_number_of_reservations;
 }
 
-std::string ReservationList::get_reservation_string(int reservation_order_number) {
+std::string ReservationList::get_reservation_string(int reservation_order_number) const {
     std::ostringstream output_string_stream;
 
     output_string_stream << "Id: " << reservation_list[reservation_order_number - 1].id << ", "

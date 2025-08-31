@@ -14,8 +14,8 @@ public:
         int start_time,
         int end_time
     );
-    std::string get_reservation_string(int reservation_order_number);
-    int get_total_number_of_reservations();
+    std::string get_reservation_string(int reservation_order_number) const;
+    int get_total_number_of_reservations() const;
 private:
     struct Reservation {
         int id;

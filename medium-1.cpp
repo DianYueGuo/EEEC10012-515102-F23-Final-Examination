@@ -12,6 +12,8 @@ void read_room_data(std::ifstream &input_file_stream, RoomList &room_list);
 void read_number_of_reservations(std::ifstream &input_file_stream, int &number_of_reservations);
 void read_reservation_data(std::ifstream &input_file_stream, ReservationList &reservation_list);
 
+void output_task1_file(const std::string &task1_out_file_name, const ReservationList &reservation_list);
+
 int main(int argc, char *argv[]) {
 
     if (argc != 1 + 4) {
@@ -43,6 +45,12 @@ int main(int argc, char *argv[]) {
 
     input_file_stream.close();
 
+    output_task1_file(task1_out_file_name, reservation_list);
+
+    return 0;
+}
+
+void output_task1_file(const std::string &task1_out_file_name, const ReservationList &reservation_list) {
     std::ofstream output_file_stream;
     output_file_stream.open(task1_out_file_name);
 
@@ -53,8 +61,6 @@ int main(int argc, char *argv[]) {
     }
 
     output_file_stream.close();
-
-    return 0;
 }
 
 void read_number_of_rooms(std::ifstream &input_file_stream, int &number_of_rooms) {

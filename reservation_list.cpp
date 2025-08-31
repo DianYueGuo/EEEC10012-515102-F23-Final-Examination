@@ -121,7 +121,7 @@ bool ReservationList::is_reservation_valid(int reservation_sorted_order_number) 
             continue;
         }
 
-        if (do_reservation_have_overlap(reservation_in_question, reservation_in_question)) {
+        if (do_reservations_have_overlap(reservation_in_question, reservation_in_question)) {
             return false;
         }
     }
@@ -129,7 +129,7 @@ bool ReservationList::is_reservation_valid(int reservation_sorted_order_number) 
     return true;
 }
 
-bool ReservationList::do_reservation_have_overlap(Reservation &reservation_1, Reservation &reservation_2) const {
+bool ReservationList::do_reservations_have_overlap(Reservation &reservation_1, Reservation &reservation_2) const {
     if (reservation_1.start_time < reservation_2.start_time && reservation_1.end_time < reservation_2.start_time ) {
         return false;
     }

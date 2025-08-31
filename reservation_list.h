@@ -40,7 +40,7 @@ private:
     int number_of_valid_reservations;
     void sort_ordered_reservation_order_number_list() const;
     bool is_reservation_valid(int reservation_sorted_order_number) const;
-    bool do_reservation_have_overlap(Reservation &reservation_1, Reservation &reservation_2) const;
+    bool do_reservations_have_overlap(Reservation &reservation_1, Reservation &reservation_2) const;
 };
 
 #endif

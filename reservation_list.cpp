@@ -53,7 +53,7 @@ std::string ReservationList::get_reservation_string(int reservation_order_number
     return output_string_stream.str();
 }
 
-std::string ReservationList::get_reservation_string_sorted(int reservation_sorted_order_number) const {
+void ReservationList::sort_ordered_reservation_order_number_list() const {
     std::sort(
         ordered_reservation_order_number_list,
         ordered_reservation_order_number_list + number_of_reservations_added,
@@ -61,6 +61,22 @@ std::string ReservationList::get_reservation_string_sorted(int reservation_sorte
             return reservation_list[first_reservation_order_number - 1].id < reservation_list[second_reservation_order_number - 1].id;
         }
     );
+}
+
+std::string ReservationList::get_reservation_string_sorted(int reservation_sorted_order_number) const {
+    sort_ordered_reservation_order_number_list();
 
     return get_reservation_string(ordered_reservation_order_number_list[reservation_sorted_order_number - 1]);
+}
+
+std::string ReservationList::get_room_name_sorted(int reservation_sorted_order_number) const {
+    sort_ordered_reservation_order_number_list();
+
+    return reservation_list[ordered_reservation_order_number_list[reservation_sorted_order_number - 1] - 1].reserved_room_name;
+}
+
+std::string ReservationList::get_roomer_name_sorted(int reservation_sorted_order_number) const {
+    sort_ordered_reservation_order_number_list();
+
+    return reservation_list[ordered_reservation_order_number_list[reservation_sorted_order_number - 1] - 1].name;
 }

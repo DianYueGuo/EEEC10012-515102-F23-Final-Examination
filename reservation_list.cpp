@@ -84,6 +84,12 @@ std::string ReservationList::get_valid_reservation_string_sorted(int valid_reser
     return get_reservation_string(valid_reservation_list[valid_reservation_sorted_order_number - 1]->order_number, room_list, true);
 }
 
+int ReservationList::get_valid_sorted_reservation_total_cost(int valid_reservation_sorted_order_number, const RoomList &room_list) const {
+    int duration = valid_reservation_list[valid_reservation_sorted_order_number - 1]->end_time - valid_reservation_list[valid_reservation_sorted_order_number - 1]->start_time;
+
+    return duration * room_list.get_price_per_hour(valid_reservation_list[valid_reservation_sorted_order_number - 1]->reserved_room_name);
+}
+
 std::string ReservationList::get_room_name_sorted(int reservation_sorted_order_number) const {
     sort_ordered_reservation_order_number_list();
 
@@ -94,6 +100,14 @@ std::string ReservationList::get_roomer_name_sorted(int reservation_sorted_order
     sort_ordered_reservation_order_number_list();
 
     return ordered_reservation_list[reservation_sorted_order_number - 1]->name;
+}
+
+std::string ReservationList::get_valid_reservation_room_name_sorted(int valid_reservation_sorted_order_number) const {
+    return valid_reservation_list[valid_reservation_sorted_order_number - 1]->reserved_room_name;
+}
+
+std::string ReservationList::get_valid_reservation_roomer_name_sorted(int valid_reservation_sorted_order_number) const{
+    return valid_reservation_list[valid_reservation_sorted_order_number - 1]->name;
 }
 
 void ReservationList::process_reservation_validity() {

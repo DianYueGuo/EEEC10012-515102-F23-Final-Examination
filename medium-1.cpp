@@ -65,6 +65,12 @@ int main(int argc, char *argv[]) {
         output_file_stream << reservation_list.get_valid_reservation_string_sorted(valid_reservation_sorted_order_number, room_list) << std::endl;
     }
 
+    output_file_stream << "Room Information: " << std::endl;
+
+    for (int room_order_number = 1; room_order_number <= room_list.get_total_number_of_rooms(); room_order_number++) {
+        output_file_stream << room_list.get_room_string(room_order_number, reservation_list, true) << std::endl;
+    }
+
     output_file_stream.close();
 
     return 0;

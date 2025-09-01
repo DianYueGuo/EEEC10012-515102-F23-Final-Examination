@@ -23,25 +23,66 @@ int RoomList::get_total_number_of_rooms() const{
     return total_number_of_rooms;
 }
 
-std::string RoomList::get_room_string(int room_order_number, const ReservationList &reservation_list) const {
-    std::ostringstream output_string_stream;
+int RoomList::get_room_earnings(int room_order_number, const ReservationList &reservation_list) const {
+    int earnings = 0;
 
-    output_string_stream << "Room " << room_list[room_order_number - 1].room_name << ": "
-                         << "Price " << room_list[room_order_number - 1].price_per_hour << ", "
-                         << "Earnings: " << 0 << ", ";
-
-    output_string_stream << "Roomer:";
     for (
-        int reservation_sorted_order_number = 1;
-        reservation_sorted_order_number <= reservation_list.get_total_number_of_reservations();
-        reservation_sorted_order_number++
+        int valid_reservation_sorted_order_number = 1;
+        valid_reservation_sorted_order_number <= reservation_list.get_total_number_of_valid_reservations();
+        valid_reservation_sorted_order_number++
     ) {
         if (room_list[room_order_number - 1].room_name
             .compare(
-                reservation_list.get_room_name_sorted(reservation_sorted_order_number)
+                reservation_list.get_valid_reservation_room_name_sorted(valid_reservation_sorted_order_number)
             ) == 0
         ) {
-            output_string_stream << " " << reservation_list.get_roomer_name_sorted(reservation_sorted_order_number);
+            earnings += reservation_list.get_valid_sorted_reservation_total_cost(valid_reservation_sorted_order_number, *this);
+        }
+    }
+
+    return earnings;
+}
+
+std::string RoomList::get_room_string(int room_order_number, const ReservationList &reservation_list, bool does_calculate_earnings_and_include_only_valid_roomers) const {
+    std::ostringstream output_string_stream;
+
+    output_string_stream << "Room " << room_list[room_order_number - 1].room_name << ": "
+                         << "Price " << room_list[room_order_number - 1].price_per_hour << ", ";
+
+    if (does_calculate_earnings_and_include_only_valid_roomers) {
+        output_string_stream << "Earnings: " << get_room_earnings(room_order_number, reservation_list) << ", ";
+    } else {
+        output_string_stream << "Earnings: " << 0 << ", ";
+    }
+
+    output_string_stream << "Roomer:";
+    if (does_calculate_earnings_and_include_only_valid_roomers) {
+        for (
+            int valid_reservation_sorted_order_number = 1;
+            valid_reservation_sorted_order_number <= reservation_list.get_total_number_of_valid_reservations();
+            valid_reservation_sorted_order_number++
+        ) {
+            if (room_list[room_order_number - 1].room_name
+                .compare(
+                    reservation_list.get_valid_reservation_room_name_sorted(valid_reservation_sorted_order_number)
+                ) == 0
+            ) {
+                output_string_stream << " " << reservation_list.get_valid_reservation_roomer_name_sorted(valid_reservation_sorted_order_number);
+            }
+        }
+    } else {
+        for (
+            int reservation_sorted_order_number = 1;
+            reservation_sorted_order_number <= reservation_list.get_total_number_of_reservations();
+            reservation_sorted_order_number++
+        ) {
+            if (room_list[room_order_number - 1].room_name
+                .compare(
+                    reservation_list.get_room_name_sorted(reservation_sorted_order_number)
+                ) == 0
+            ) {
+                output_string_stream << " " << reservation_list.get_roomer_name_sorted(reservation_sorted_order_number);
+            }
         }
     }
 

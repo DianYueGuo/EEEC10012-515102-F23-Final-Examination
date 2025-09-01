@@ -23,6 +23,9 @@ public:
     std::string get_valid_reservation_string_sorted(int valid_reservation_sorted_order_number, const RoomList &room_list) const;
     std::string get_room_name_sorted(int reservation_sorted_order_number) const;
     std::string get_roomer_name_sorted(int reservation_sorted_order_number) const;
+    std::string get_valid_reservation_room_name_sorted(int valid_reservation_sorted_order_number) const;
+    std::string get_valid_reservation_roomer_name_sorted(int valid_reservation_sorted_order_number) const;
+    int get_valid_sorted_reservation_total_cost(int valid_reservation_sorted_order_number, const RoomList &room_list) const;
     void process_reservation_validity();
     int get_total_number_of_reservations() const;
     int get_total_number_of_valid_reservations() const;

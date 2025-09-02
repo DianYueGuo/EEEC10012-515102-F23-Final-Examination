@@ -14,6 +14,7 @@ void read_reservation_data(std::ifstream &input_file_stream, ReservationList &re
 
 void output_task1_file(const std::string &task1_out_file_name, const ReservationList &reservation_list, const RoomList &room_list);
 void output_task2_file(const std::string &task2_out_file_name, const ReservationList &reservation_list, const RoomList &room_list);
+void output_task3_file(const std::string &task3_out_file_name, ReservationList &reservation_list, const RoomList &room_list);
 
 int main(int argc, char *argv[]) {
 
@@ -50,28 +51,7 @@ int main(int argc, char *argv[]) {
 
     output_task2_file(task2_out_file_name, reservation_list, room_list);
 
-    std::ofstream output_file_stream;
-    output_file_stream.open(task3_out_file_name);
-
-    output_file_stream << "Reservation Information: " << std::endl;
-
-    reservation_list.process_reservation_validity();
-
-    for (
-        int valid_reservation_sorted_order_number = 1;
-        valid_reservation_sorted_order_number <= reservation_list.get_total_number_of_valid_reservations();
-        valid_reservation_sorted_order_number++
-    ) {
-        output_file_stream << reservation_list.get_valid_reservation_string_sorted(valid_reservation_sorted_order_number, room_list) << std::endl;
-    }
-
-    output_file_stream << "Room Information: " << std::endl;
-
-    for (int room_order_number = 1; room_order_number <= room_list.get_total_number_of_rooms(); room_order_number++) {
-        output_file_stream << room_list.get_room_string(room_order_number, reservation_list, true) << std::endl;
-    }
-
-    output_file_stream.close();
+    output_task3_file(task3_out_file_name, reservation_list, room_list);
 
     return 0;
 }
@@ -107,6 +87,31 @@ void output_task2_file(const std::string &task2_out_file_name, const Reservation
 
     for (int room_order_number = 1; room_order_number <= room_list.get_total_number_of_rooms(); room_order_number++) {
         output_file_stream << room_list.get_room_string(room_order_number, reservation_list) << std::endl;
+    }
+
+    output_file_stream.close();
+}
+
+void output_task3_file(const std::string &task3_out_file_name, ReservationList &reservation_list, const RoomList &room_list) {
+    std::ofstream output_file_stream;
+    output_file_stream.open(task3_out_file_name);
+
+    output_file_stream << "Reservation Information: " << std::endl;
+
+    reservation_list.process_reservation_validity();
+
+    for (
+        int valid_reservation_sorted_order_number = 1;
+        valid_reservation_sorted_order_number <= reservation_list.get_total_number_of_valid_reservations();
+        valid_reservation_sorted_order_number++
+    ) {
+        output_file_stream << reservation_list.get_valid_reservation_string_sorted(valid_reservation_sorted_order_number, room_list) << std::endl;
+    }
+
+    output_file_stream << "Room Information: " << std::endl;
+
+    for (int room_order_number = 1; room_order_number <= room_list.get_total_number_of_rooms(); room_order_number++) {
+        output_file_stream << room_list.get_room_string(room_order_number, reservation_list, true) << std::endl;
     }
 
     output_file_stream.close();

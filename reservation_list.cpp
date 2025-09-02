@@ -74,16 +74,6 @@ void ReservationList::sort_ordered_reservation_order_number_list() const {
     );
 }
 
-std::string ReservationList::get_reservation_string_sorted(int reservation_sorted_order_number, const RoomList &room_list) const {
-    sort_ordered_reservation_order_number_list();
-
-    return get_reservation_string(ordered_reservation_list[reservation_sorted_order_number - 1]->order_number, room_list);
-}
-
-std::string ReservationList::get_valid_reservation_string_sorted(int valid_reservation_sorted_order_number, const RoomList &room_list) const {
-    return get_reservation_string(valid_reservation_list[valid_reservation_sorted_order_number - 1]->order_number, room_list, true);
-}
-
 std::string ReservationList::get_total_reservation_information_string(const RoomList &room_list, bool is_sorted_by_id, bool does_include_only_valid_reservation_and_calculate_total_cost) const {
     if (!is_sorted_by_id) {
         std::ostringstream output_string_stream;
@@ -96,6 +86,8 @@ std::string ReservationList::get_total_reservation_information_string(const Room
     }
 
     if (!does_include_only_valid_reservation_and_calculate_total_cost) {
+        sort_ordered_reservation_order_number_list();
+
         std::ostringstream output_string_stream;
 
         for (
@@ -103,7 +95,7 @@ std::string ReservationList::get_total_reservation_information_string(const Room
             reservation_sorted_order_number <= total_number_of_reservations;
             reservation_sorted_order_number++
         ) {
-            output_string_stream << get_reservation_string_sorted(reservation_sorted_order_number, room_list) << std::endl;
+            output_string_stream << get_reservation_string(ordered_reservation_list[reservation_sorted_order_number - 1]->order_number, room_list) << std::endl;
         }
 
         return output_string_stream.str();
@@ -116,7 +108,7 @@ std::string ReservationList::get_total_reservation_information_string(const Room
         valid_reservation_sorted_order_number <= number_of_valid_reservations;
         valid_reservation_sorted_order_number++
     ) {
-        output_string_stream << get_valid_reservation_string_sorted(valid_reservation_sorted_order_number, room_list) << std::endl;
+        output_string_stream << get_reservation_string(valid_reservation_list[valid_reservation_sorted_order_number - 1]->order_number, room_list, true) << std::endl;
     }
 
     return output_string_stream.str();

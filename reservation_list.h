@@ -46,8 +46,6 @@ private:
     bool is_reservation_valid(int reservation_sorted_order_number) const;
     bool do_reservations_have_overlap(Reservation &reservation_1, Reservation &reservation_2) const;
     std::string get_reservation_string(int reservation_order_number, const RoomList &room_list, bool does_calculate_total_cost = false) const;
-    std::string get_reservation_string_sorted(int reservation_sorted_order_number, const RoomList &room_list) const;
-    std::string get_valid_reservation_string_sorted(int valid_reservation_sorted_order_number, const RoomList &room_list) const;
 };
 
 #endif

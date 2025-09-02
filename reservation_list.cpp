@@ -114,16 +114,6 @@ std::string ReservationList::get_total_reservation_information_string(const Room
     return output_string_stream.str();
 }
 
-int ReservationList::get_valid_sorted_reservation_total_cost(int valid_reservation_sorted_order_number, const RoomList &room_list) const {
-    int duration = valid_reservation_list[valid_reservation_sorted_order_number - 1]->end_time - valid_reservation_list[valid_reservation_sorted_order_number - 1]->start_time;
-
-    return duration * room_list.get_price_per_hour(valid_reservation_list[valid_reservation_sorted_order_number - 1]->reserved_room_name);
-}
-
-std::string ReservationList::get_valid_reservation_room_name_sorted(int valid_reservation_sorted_order_number) const {
-    return valid_reservation_list[valid_reservation_sorted_order_number - 1]->reserved_room_name;
-}
-
 void ReservationList::process_reservation_validity() {
     for (
         int reservation_sorted_order_number = 1;
@@ -175,10 +165,6 @@ bool ReservationList::do_reservations_have_overlap(Reservation &reservation_1, R
     return true;
 }
 
-int ReservationList::get_total_number_of_valid_reservations() const {
-    return number_of_valid_reservations;
-}
-
 std::string ReservationList::get_roomer_names(const std::string room_name, bool does_include_only_valid_roomers) const {
     std::ostringstream output_string_stream;
 
@@ -189,7 +175,7 @@ std::string ReservationList::get_roomer_names(const std::string room_name, bool 
             valid_reservation_sorted_order_number++
         ) {
             if (room_name.compare(
-                    get_valid_reservation_room_name_sorted(valid_reservation_sorted_order_number)
+                    valid_reservation_list[valid_reservation_sorted_order_number - 1]->reserved_room_name
                 ) == 0
             ) {
                 output_string_stream << " " << valid_reservation_list[valid_reservation_sorted_order_number - 1]->name;
@@ -224,10 +210,11 @@ int ReservationList::get_room_earnings(const std::string room_name, const RoomLi
         valid_reservation_sorted_order_number++
     ) {
         if (room_name.compare(
-                get_valid_reservation_room_name_sorted(valid_reservation_sorted_order_number)
+                valid_reservation_list[valid_reservation_sorted_order_number - 1]->reserved_room_name
             ) == 0
         ) {
-            earnings += get_valid_sorted_reservation_total_cost(valid_reservation_sorted_order_number, room_list);
+            int duration = valid_reservation_list[valid_reservation_sorted_order_number - 1]->end_time - valid_reservation_list[valid_reservation_sorted_order_number - 1]->start_time;
+            earnings += duration * room_list.get_price_per_hour(valid_reservation_list[valid_reservation_sorted_order_number - 1]->reserved_room_name);
         }
     }
 

@@ -18,13 +18,11 @@ public:
         int start_time,
         int end_time
     );
-    std::string get_reservation_string(int reservation_order_number, const RoomList &room_list, bool does_calculate_total_cost = false) const;
-    std::string get_reservation_string_sorted(int reservation_sorted_order_number, const RoomList &room_list) const;
-    std::string get_valid_reservation_string_sorted(int valid_reservation_sorted_order_number, const RoomList &room_list) const;
     std::string get_room_name_sorted(int reservation_sorted_order_number) const;
     std::string get_roomer_name_sorted(int reservation_sorted_order_number) const;
     std::string get_valid_reservation_room_name_sorted(int valid_reservation_sorted_order_number) const;
     std::string get_valid_reservation_roomer_name_sorted(int valid_reservation_sorted_order_number) const;
+    std::string get_total_reservation_information_string(const RoomList &room_list, bool is_sorted_by_id = false, bool does_include_only_valid_reservation_and_calculate_total_cost = false) const;
     int get_valid_sorted_reservation_total_cost(int valid_reservation_sorted_order_number, const RoomList &room_list) const;
     void process_reservation_validity();
     int get_total_number_of_reservations() const;
@@ -47,6 +45,9 @@ private:
     void sort_ordered_reservation_order_number_list() const;
     bool is_reservation_valid(int reservation_sorted_order_number) const;
     bool do_reservations_have_overlap(Reservation &reservation_1, Reservation &reservation_2) const;
+    std::string get_reservation_string(int reservation_order_number, const RoomList &room_list, bool does_calculate_total_cost = false) const;
+    std::string get_reservation_string_sorted(int reservation_sorted_order_number, const RoomList &room_list) const;
+    std::string get_valid_reservation_string_sorted(int valid_reservation_sorted_order_number, const RoomList &room_list) const;
 };
 
 #endif

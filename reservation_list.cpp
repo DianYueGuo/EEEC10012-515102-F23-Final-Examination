@@ -84,6 +84,44 @@ std::string ReservationList::get_valid_reservation_string_sorted(int valid_reser
     return get_reservation_string(valid_reservation_list[valid_reservation_sorted_order_number - 1]->order_number, room_list, true);
 }
 
+std::string ReservationList::get_total_reservation_information_string(const RoomList &room_list, bool is_sorted_by_id, bool does_include_only_valid_reservation_and_calculate_total_cost) const {
+    if (!is_sorted_by_id) {
+        std::ostringstream output_string_stream;
+
+        for (int reservation_order_number = 1; reservation_order_number <= total_number_of_reservations; reservation_order_number++) {
+            output_string_stream << get_reservation_string(reservation_order_number, room_list) << std::endl;
+        }
+
+        return output_string_stream.str();
+    }
+
+    if (!does_include_only_valid_reservation_and_calculate_total_cost) {
+        std::ostringstream output_string_stream;
+
+        for (
+            int reservation_sorted_order_number = 1;
+            reservation_sorted_order_number <= total_number_of_reservations;
+            reservation_sorted_order_number++
+        ) {
+            output_string_stream << get_reservation_string_sorted(reservation_sorted_order_number, room_list) << std::endl;
+        }
+
+        return output_string_stream.str();
+    }
+
+    std::ostringstream output_string_stream;
+
+    for (
+        int valid_reservation_sorted_order_number = 1;
+        valid_reservation_sorted_order_number <= number_of_valid_reservations;
+        valid_reservation_sorted_order_number++
+    ) {
+        output_string_stream << get_valid_reservation_string_sorted(valid_reservation_sorted_order_number, room_list) << std::endl;
+    }
+
+    return output_string_stream.str();
+}
+
 int ReservationList::get_valid_sorted_reservation_total_cost(int valid_reservation_sorted_order_number, const RoomList &room_list) const {
     int duration = valid_reservation_list[valid_reservation_sorted_order_number - 1]->end_time - valid_reservation_list[valid_reservation_sorted_order_number - 1]->start_time;
 

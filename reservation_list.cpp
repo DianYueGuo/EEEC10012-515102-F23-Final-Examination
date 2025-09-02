@@ -120,24 +120,8 @@ int ReservationList::get_valid_sorted_reservation_total_cost(int valid_reservati
     return duration * room_list.get_price_per_hour(valid_reservation_list[valid_reservation_sorted_order_number - 1]->reserved_room_name);
 }
 
-std::string ReservationList::get_room_name_sorted(int reservation_sorted_order_number) const {
-    sort_ordered_reservation_order_number_list();
-
-    return ordered_reservation_list[reservation_sorted_order_number - 1]->reserved_room_name;
-}
-
-std::string ReservationList::get_roomer_name_sorted(int reservation_sorted_order_number) const {
-    sort_ordered_reservation_order_number_list();
-
-    return ordered_reservation_list[reservation_sorted_order_number - 1]->name;
-}
-
 std::string ReservationList::get_valid_reservation_room_name_sorted(int valid_reservation_sorted_order_number) const {
     return valid_reservation_list[valid_reservation_sorted_order_number - 1]->reserved_room_name;
-}
-
-std::string ReservationList::get_valid_reservation_roomer_name_sorted(int valid_reservation_sorted_order_number) const{
-    return valid_reservation_list[valid_reservation_sorted_order_number - 1]->name;
 }
 
 void ReservationList::process_reservation_validity() {
@@ -208,20 +192,22 @@ std::string ReservationList::get_roomer_names(const std::string room_name, bool 
                     get_valid_reservation_room_name_sorted(valid_reservation_sorted_order_number)
                 ) == 0
             ) {
-                output_string_stream << " " << get_valid_reservation_roomer_name_sorted(valid_reservation_sorted_order_number);
+                output_string_stream << " " << valid_reservation_list[valid_reservation_sorted_order_number - 1]->name;
             }
         }
     } else {
+        sort_ordered_reservation_order_number_list();
+
         for (
             int reservation_sorted_order_number = 1;
             reservation_sorted_order_number <= total_number_of_reservations;
             reservation_sorted_order_number++
         ) {
             if (room_name.compare(
-                    get_room_name_sorted(reservation_sorted_order_number)
+                    ordered_reservation_list[reservation_sorted_order_number - 1]->reserved_room_name
                 ) == 0
             ) {
-                output_string_stream << " " << get_roomer_name_sorted(reservation_sorted_order_number);
+                output_string_stream << " " << ordered_reservation_list[reservation_sorted_order_number - 1]->name;
             }
         }
     }

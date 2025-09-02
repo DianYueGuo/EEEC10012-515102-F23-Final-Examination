@@ -23,6 +23,7 @@ public:
     std::string get_valid_reservation_room_name_sorted(int valid_reservation_sorted_order_number) const;
     std::string get_valid_reservation_roomer_name_sorted(int valid_reservation_sorted_order_number) const;
     std::string get_total_reservation_information_string(const RoomList &room_list, bool is_sorted_by_id = false, bool does_include_only_valid_reservation_and_calculate_total_cost = false) const;
+    std::string get_roomer_names(const std::string room_name, bool does_include_only_valid_roomers) const;
     int get_valid_sorted_reservation_total_cost(int valid_reservation_sorted_order_number, const RoomList &room_list) const;
     void process_reservation_validity();
     int get_total_number_of_reservations() const;

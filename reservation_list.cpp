@@ -194,3 +194,37 @@ bool ReservationList::do_reservations_have_overlap(Reservation &reservation_1, R
 int ReservationList::get_total_number_of_valid_reservations() const {
     return number_of_valid_reservations;
 }
+
+std::string ReservationList::get_roomer_names(const std::string room_name, bool does_include_only_valid_roomers) const {
+    std::ostringstream output_string_stream;
+
+    if (does_include_only_valid_roomers) {
+        for (
+            int valid_reservation_sorted_order_number = 1;
+            valid_reservation_sorted_order_number <= number_of_valid_reservations;
+            valid_reservation_sorted_order_number++
+        ) {
+            if (room_name.compare(
+                    get_valid_reservation_room_name_sorted(valid_reservation_sorted_order_number)
+                ) == 0
+            ) {
+                output_string_stream << " " << get_valid_reservation_roomer_name_sorted(valid_reservation_sorted_order_number);
+            }
+        }
+    } else {
+        for (
+            int reservation_sorted_order_number = 1;
+            reservation_sorted_order_number <= total_number_of_reservations;
+            reservation_sorted_order_number++
+        ) {
+            if (room_name.compare(
+                    get_room_name_sorted(reservation_sorted_order_number)
+                ) == 0
+            ) {
+                output_string_stream << " " << get_roomer_name_sorted(reservation_sorted_order_number);
+            }
+        }
+    }
+
+    return output_string_stream.str();
+}

@@ -55,36 +55,8 @@ std::string RoomList::get_room_string(int room_order_number, const ReservationLi
         output_string_stream << "Earnings: " << 0 << ", ";
     }
 
-    output_string_stream << "Roomer:";
-    if (does_calculate_earnings_and_include_only_valid_roomers) {
-        for (
-            int valid_reservation_sorted_order_number = 1;
-            valid_reservation_sorted_order_number <= reservation_list.get_total_number_of_valid_reservations();
-            valid_reservation_sorted_order_number++
-        ) {
-            if (room_list[room_order_number - 1].room_name
-                .compare(
-                    reservation_list.get_valid_reservation_room_name_sorted(valid_reservation_sorted_order_number)
-                ) == 0
-            ) {
-                output_string_stream << " " << reservation_list.get_valid_reservation_roomer_name_sorted(valid_reservation_sorted_order_number);
-            }
-        }
-    } else {
-        for (
-            int reservation_sorted_order_number = 1;
-            reservation_sorted_order_number <= reservation_list.get_total_number_of_reservations();
-            reservation_sorted_order_number++
-        ) {
-            if (room_list[room_order_number - 1].room_name
-                .compare(
-                    reservation_list.get_room_name_sorted(reservation_sorted_order_number)
-                ) == 0
-            ) {
-                output_string_stream << " " << reservation_list.get_roomer_name_sorted(reservation_sorted_order_number);
-            }
-        }
-    }
+    output_string_stream << "Roomer:"
+                         << reservation_list.get_roomer_names(room_list[room_order_number - 1].room_name, does_calculate_earnings_and_include_only_valid_roomers);
 
     return output_string_stream.str();
 }

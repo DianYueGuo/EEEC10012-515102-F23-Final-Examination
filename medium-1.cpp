@@ -84,10 +84,7 @@ void output_task2_file(const std::string &task2_out_file_name, const Reservation
     }
 
     output_file_stream << "Room Information: " << std::endl;
-
-    for (int room_order_number = 1; room_order_number <= room_list.get_total_number_of_rooms(); room_order_number++) {
-        output_file_stream << room_list.get_room_string(room_order_number, reservation_list) << std::endl;
-    }
+    output_file_stream << room_list.get_total_room_information_string(reservation_list);
 
     output_file_stream.close();
 }
@@ -109,10 +106,7 @@ void output_task3_file(const std::string &task3_out_file_name, ReservationList &
     }
 
     output_file_stream << "Room Information: " << std::endl;
-
-    for (int room_order_number = 1; room_order_number <= room_list.get_total_number_of_rooms(); room_order_number++) {
-        output_file_stream << room_list.get_room_string(room_order_number, reservation_list, true) << std::endl;
-    }
+    output_file_stream << room_list.get_total_room_information_string(reservation_list, true);
 
     output_file_stream.close();
 }

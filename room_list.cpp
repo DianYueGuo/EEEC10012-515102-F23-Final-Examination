@@ -89,6 +89,16 @@ std::string RoomList::get_room_string(int room_order_number, const ReservationLi
     return output_string_stream.str();
 }
 
+std::string RoomList::get_total_room_information_string(const ReservationList &reservation_list, bool does_calculate_earnings_and_include_only_valid_roomers) const {
+    std::ostringstream output_string_stream;
+
+    for (int room_order_number = 1; room_order_number <= total_number_of_rooms; room_order_number++) {
+        output_string_stream << get_room_string(room_order_number, reservation_list, does_calculate_earnings_and_include_only_valid_roomers) << std::endl;
+    }
+
+    return output_string_stream.str();
+}
+
 int RoomList::get_price_per_hour(const std::string room_name) const {
     for (int room_list_index = 0; room_list_index < number_of_rooms_added; room_list_index++) {
         if (room_name.compare(room_list[room_list_index].room_name) == 0) {

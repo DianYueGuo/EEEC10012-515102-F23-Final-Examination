@@ -214,3 +214,22 @@ std::string ReservationList::get_roomer_names(const std::string room_name, bool 
 
     return output_string_stream.str();
 }
+
+int ReservationList::get_room_earnings(const std::string room_name, const RoomList &room_list) const {
+    int earnings = 0;
+
+    for (
+        int valid_reservation_sorted_order_number = 1;
+        valid_reservation_sorted_order_number <= number_of_valid_reservations;
+        valid_reservation_sorted_order_number++
+    ) {
+        if (room_name.compare(
+                get_valid_reservation_room_name_sorted(valid_reservation_sorted_order_number)
+            ) == 0
+        ) {
+            earnings += get_valid_sorted_reservation_total_cost(valid_reservation_sorted_order_number, room_list);
+        }
+    }
+
+    return earnings;
+}

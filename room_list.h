@@ -23,7 +23,7 @@ private:
     int total_number_of_rooms;
     int number_of_rooms_added;
     int get_room_earnings(int room_order_number, const ReservationList &reservation_list) const;
-    std::string get_room_string(int room_order_number, const ReservationList &reservation_list, bool does_calculate_earnings_and_include_only_valid_roomers = false) const;
+    std::string get_room_string(const Room &room, const ReservationList &reservation_list, bool does_calculate_earnings_and_include_only_valid_roomers = false) const;
 };
 
 #endif

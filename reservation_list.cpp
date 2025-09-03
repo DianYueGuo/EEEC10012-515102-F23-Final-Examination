@@ -19,14 +19,12 @@ ReservationList::~ReservationList() {
 }
 
 void ReservationList::add_reservation(
-        int order_number,
         int id,
         std::string &name,
         std::string &reserved_room_name,
         int start_time,
         int end_time
 ) {
-    reservation_list[number_of_reservations_added].order_number = order_number;
     reservation_list[number_of_reservations_added].id = id;
     reservation_list[number_of_reservations_added].name = name;
     reservation_list[number_of_reservations_added].reserved_room_name = reserved_room_name;
@@ -42,21 +40,21 @@ int ReservationList::get_total_number_of_reservations() const {
     return total_number_of_reservations;
 }
 
-std::string ReservationList::get_reservation_string(int reservation_order_number, const RoomList &room_list, bool does_calculate_total_cost) const {
+std::string ReservationList::get_reservation_string(const Reservation &reservation, const RoomList &room_list, bool does_calculate_total_cost) const {
     std::ostringstream output_string_stream;
 
-    int duration = reservation_list[reservation_order_number - 1].end_time - reservation_list[reservation_order_number - 1].start_time;
+    int duration = reservation.end_time - reservation.start_time;
 
-    output_string_stream << "Id: " << reservation_list[reservation_order_number - 1].id << ", "
-                         << "Name: " << reservation_list[reservation_order_number - 1].name << ", "
-                         << "Room: " << reservation_list[reservation_order_number - 1].reserved_room_name << ", "
-                         << "Start: " << reservation_list[reservation_order_number - 1].start_time << ", "
-                         << "End: " << reservation_list[reservation_order_number - 1].end_time << ", "
+    output_string_stream << "Id: " << reservation.id << ", "
+                         << "Name: " << reservation.name << ", "
+                         << "Room: " << reservation.reserved_room_name << ", "
+                         << "Start: " << reservation.start_time << ", "
+                         << "End: " << reservation.end_time << ", "
                          << "Duration: " << duration << "hr, "
                          << "Total Cost: ";
 
     if (does_calculate_total_cost) {
-        output_string_stream << duration * room_list.get_price_per_hour(reservation_list[reservation_order_number - 1].reserved_room_name);
+        output_string_stream << duration * room_list.get_price_per_hour(reservation.reserved_room_name);
     } else {
         output_string_stream << 0;
     }
@@ -111,7 +109,7 @@ std::string ReservationList::get_total_reservation_information_string(const Room
     for_each_reservation(
         [&](Reservation &reservation) {
             output_string_stream << get_reservation_string(
-                reservation.order_number,
+                reservation,
                 room_list,
                 does_include_only_valid_reservation_and_calculate_total_cost
             ) << std::endl;

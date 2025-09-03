@@ -23,20 +23,20 @@ int RoomList::get_total_number_of_rooms() const{
     return total_number_of_rooms;
 }
 
-std::string RoomList::get_room_string(int room_order_number, const ReservationList &reservation_list, bool does_calculate_earnings_and_include_only_valid_roomers) const {
+std::string RoomList::get_room_string(const Room &room, const ReservationList &reservation_list, bool does_calculate_earnings_and_include_only_valid_roomers) const {
     std::ostringstream output_string_stream;
 
-    output_string_stream << "Room " << room_list[room_order_number - 1].room_name << ": "
-                         << "Price " << room_list[room_order_number - 1].price_per_hour << ", ";
+    output_string_stream << "Room " << room.room_name << ": "
+                         << "Price " << room.price_per_hour << ", ";
 
     if (does_calculate_earnings_and_include_only_valid_roomers) {
-        output_string_stream << "Earnings: " << reservation_list.get_room_earnings(room_list[room_order_number - 1].room_name, *this) << ", ";
+        output_string_stream << "Earnings: " << reservation_list.get_room_earnings(room.room_name, *this) << ", ";
     } else {
         output_string_stream << "Earnings: " << 0 << ", ";
     }
 
     output_string_stream << "Roomer:"
-                         << reservation_list.get_roomer_names(room_list[room_order_number - 1].room_name, does_calculate_earnings_and_include_only_valid_roomers);
+                         << reservation_list.get_roomer_names(room.room_name, does_calculate_earnings_and_include_only_valid_roomers);
 
     return output_string_stream.str();
 }
@@ -45,7 +45,7 @@ std::string RoomList::get_total_room_information_string(const ReservationList &r
     std::ostringstream output_string_stream;
 
     for (int room_order_number = 1; room_order_number <= total_number_of_rooms; room_order_number++) {
-        output_string_stream << get_room_string(room_order_number, reservation_list, does_calculate_earnings_and_include_only_valid_roomers) << std::endl;
+        output_string_stream << get_room_string(room_list[room_order_number - 1], reservation_list, does_calculate_earnings_and_include_only_valid_roomers) << std::endl;
     }
 
     return output_string_stream.str();

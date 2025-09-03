@@ -12,7 +12,6 @@ public:
     ReservationList(int number_of_reservations);
     ~ReservationList();
     void add_reservation(
-        int order_number,
         int id,
         std::string &name,
         std::string &reserved_room_name,
@@ -42,7 +41,7 @@ private:
     void sort_ordered_reservation_order_number_list() const;
     bool is_reservation_valid(const Reservation &reservation_in_question) const;
     bool do_reservations_have_overlap(const Reservation &reservation_1, const Reservation &reservation_2) const;
-    std::string get_reservation_string(int reservation_order_number, const RoomList &room_list, bool does_calculate_total_cost = false) const;
+    std::string get_reservation_string(const Reservation &reservation, const RoomList &room_list, bool does_calculate_total_cost = false) const;
     void for_each_reservation(std::function<void(Reservation &reservation)> do_function, bool is_sorted_by_id = false, bool does_include_valid_reservation_only = false) const;
 };
 

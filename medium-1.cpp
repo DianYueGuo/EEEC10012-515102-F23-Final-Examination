@@ -140,7 +140,7 @@ void read_reservation_data(std::ifstream &input_file_stream, ReservationList &re
 
         input_string_stream >> id >> name >> reserved_room_name >> start_time >> end_time;
 
-        reservation_list.add_reservation(reservation_order_number, id, name, reserved_room_name, start_time, end_time);
+        reservation_list.add_reservation(id, name, reserved_room_name, start_time, end_time);
     }
 }
 

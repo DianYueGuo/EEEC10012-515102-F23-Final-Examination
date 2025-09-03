@@ -74,29 +74,21 @@ void ReservationList::sort_ordered_reservation_list() const {
 
 void ReservationList::for_each_reservation(std::function<void(Reservation &reservation)> do_function, bool is_sorted_by_id, bool does_include_valid_reservation_only) const {
     if (!is_sorted_by_id) {
-        for (int reservation_order_number = 1; reservation_order_number <= total_number_of_reservations; reservation_order_number++) {
-            do_function(reservation_list[reservation_order_number - 1]);
+        for (int index = 0; index < total_number_of_reservations; index++) {
+            do_function(reservation_list[index]);
         }
         return;
     }
 
     if (!does_include_valid_reservation_only) {
-        for (
-            int reservation_sorted_order_number = 1;
-            reservation_sorted_order_number <= total_number_of_reservations;
-            reservation_sorted_order_number++
-        ) {
-            do_function(*ordered_reservation_list[reservation_sorted_order_number - 1]);
+        for (int index = 0; index < total_number_of_reservations; index++) {
+            do_function(*ordered_reservation_list[index]);
         }
         return;
     }
 
-    for (
-        int valid_reservation_sorted_order_number = 1;
-        valid_reservation_sorted_order_number <= number_of_valid_reservations;
-        valid_reservation_sorted_order_number++
-    ) {
-        do_function(*valid_reservation_list[valid_reservation_sorted_order_number - 1]);
+    for (int index = 0; index < number_of_valid_reservations; index++) {
+        do_function(*valid_reservation_list[index]);
     }
     return;
 }
@@ -132,12 +124,8 @@ void ReservationList::process_reservation_validity() {
 }
 
 bool ReservationList::is_reservation_valid(const Reservation &reservation_in_question) const {
-    for (
-        int valid_reservation_sorted_order_number = 1;
-        valid_reservation_sorted_order_number <= number_of_valid_reservations;
-        valid_reservation_sorted_order_number++
-    ) {
-        Reservation &already_valid_reservation = *valid_reservation_list[valid_reservation_sorted_order_number - 1];
+    for (int index = 0; index < number_of_valid_reservations; index++) {
+        Reservation &already_valid_reservation = *valid_reservation_list[index];
 
         if (
             reservation_in_question.reserved_room_name.compare(

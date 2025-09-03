@@ -47,6 +47,9 @@ int main(int argc, char *argv[]) {
 
     input_file_stream.close();
 
+    reservation_list.sort_ordered_reservation_list();
+    reservation_list.process_reservation_validity();
+
     output_task1_file(task1_out_file_name, reservation_list, room_list);
 
     output_task2_file(task2_out_file_name, reservation_list, room_list);
@@ -84,8 +87,6 @@ void output_task3_file(const std::string &task3_out_file_name, ReservationList &
     output_file_stream.open(task3_out_file_name);
 
     output_file_stream << "Reservation Information: " << std::endl;
-
-    reservation_list.process_reservation_validity();
 
     output_file_stream << reservation_list.get_total_reservation_information_string(room_list, true, true);
 

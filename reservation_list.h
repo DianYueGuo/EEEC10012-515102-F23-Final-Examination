@@ -21,6 +21,7 @@ public:
     std::string get_total_reservation_information_string(const RoomList &room_list, bool is_sorted_by_id = false, bool does_include_only_valid_reservation_and_calculate_total_cost = false) const;
     std::string get_roomer_names(const std::string room_name, bool does_include_only_valid_roomers) const;
     int get_room_earnings(const std::string room_name, const RoomList &room_list) const;
+    void sort_ordered_reservation_list() const;
     void process_reservation_validity();
     int get_total_number_of_reservations() const;
 private:
@@ -38,7 +39,6 @@ private:
     int total_number_of_reservations;
     int number_of_reservations_added;
     int number_of_valid_reservations;
-    void sort_ordered_reservation_order_number_list() const;
     bool is_reservation_valid(const Reservation &reservation_in_question) const;
     bool do_reservations_have_overlap(const Reservation &reservation_1, const Reservation &reservation_2) const;
     std::string get_reservation_string(const Reservation &reservation, const RoomList &room_list, bool does_calculate_total_cost = false) const;

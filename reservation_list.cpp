@@ -62,7 +62,7 @@ std::string ReservationList::get_reservation_string(const Reservation &reservati
     return output_string_stream.str();
 }
 
-void ReservationList::sort_ordered_reservation_order_number_list() const {
+void ReservationList::sort_ordered_reservation_list() const {
     std::sort(
         ordered_reservation_list,
         ordered_reservation_list + number_of_reservations_added,
@@ -79,8 +79,6 @@ void ReservationList::for_each_reservation(std::function<void(Reservation &reser
         }
         return;
     }
-
-    sort_ordered_reservation_order_number_list();
 
     if (!does_include_valid_reservation_only) {
         for (

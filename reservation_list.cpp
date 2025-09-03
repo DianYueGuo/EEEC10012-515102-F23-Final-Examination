@@ -74,62 +74,68 @@ void ReservationList::sort_ordered_reservation_order_number_list() const {
     );
 }
 
-std::string ReservationList::get_total_reservation_information_string(const RoomList &room_list, bool is_sorted_by_id, bool does_include_only_valid_reservation_and_calculate_total_cost) const {
+void ReservationList::for_each_reservation(std::function<void(Reservation &reservation)> do_function, bool is_sorted_by_id, bool does_include_valid_reservation_only) const {
     if (!is_sorted_by_id) {
-        std::ostringstream output_string_stream;
-
         for (int reservation_order_number = 1; reservation_order_number <= total_number_of_reservations; reservation_order_number++) {
-            output_string_stream << get_reservation_string(reservation_order_number, room_list) << std::endl;
+            do_function(reservation_list[reservation_order_number - 1]);
         }
-
-        return output_string_stream.str();
+        return;
     }
 
-    if (!does_include_only_valid_reservation_and_calculate_total_cost) {
-        sort_ordered_reservation_order_number_list();
+    sort_ordered_reservation_order_number_list();
 
-        std::ostringstream output_string_stream;
-
+    if (!does_include_valid_reservation_only) {
         for (
             int reservation_sorted_order_number = 1;
             reservation_sorted_order_number <= total_number_of_reservations;
             reservation_sorted_order_number++
         ) {
-            output_string_stream << get_reservation_string(ordered_reservation_list[reservation_sorted_order_number - 1]->order_number, room_list) << std::endl;
+            do_function(*ordered_reservation_list[reservation_sorted_order_number - 1]);
         }
-
-        return output_string_stream.str();
+        return;
     }
-
-    std::ostringstream output_string_stream;
 
     for (
         int valid_reservation_sorted_order_number = 1;
         valid_reservation_sorted_order_number <= number_of_valid_reservations;
         valid_reservation_sorted_order_number++
     ) {
-        output_string_stream << get_reservation_string(valid_reservation_list[valid_reservation_sorted_order_number - 1]->order_number, room_list, true) << std::endl;
+        do_function(*valid_reservation_list[valid_reservation_sorted_order_number - 1]);
     }
+    return;
+}
+
+std::string ReservationList::get_total_reservation_information_string(const RoomList &room_list, bool is_sorted_by_id, bool does_include_only_valid_reservation_and_calculate_total_cost) const {
+    std::ostringstream output_string_stream;
+
+    for_each_reservation(
+        [&](Reservation &reservation) {
+            output_string_stream << get_reservation_string(
+                reservation.order_number,
+                room_list,
+                does_include_only_valid_reservation_and_calculate_total_cost
+            ) << std::endl;
+        },
+        is_sorted_by_id,
+        does_include_only_valid_reservation_and_calculate_total_cost
+    );
 
     return output_string_stream.str();
 }
 
 void ReservationList::process_reservation_validity() {
-    for (
-        int reservation_sorted_order_number = 1;
-        reservation_sorted_order_number <= total_number_of_reservations;
-        reservation_sorted_order_number++
-    ) {
-        if (is_reservation_valid(reservation_sorted_order_number)) {
-            valid_reservation_list[number_of_valid_reservations] = ordered_reservation_list[reservation_sorted_order_number - 1];
-            number_of_valid_reservations++;
-        }
-    }
+    for_each_reservation(
+        [&](Reservation &reservation) {
+            if (is_reservation_valid(reservation)) {
+                valid_reservation_list[number_of_valid_reservations] = &reservation;
+                number_of_valid_reservations++;
+            }
+        },
+        true
+    );
 }
 
-bool ReservationList::is_reservation_valid(int reservation_sorted_order_number) const {
-    Reservation &reservation_in_question = *ordered_reservation_list[reservation_sorted_order_number - 1];
-
+bool ReservationList::is_reservation_valid(const Reservation &reservation_in_question) const {
     for (
         int valid_reservation_sorted_order_number = 1;
         valid_reservation_sorted_order_number <= number_of_valid_reservations;
@@ -153,7 +159,7 @@ bool ReservationList::is_reservation_valid(int reservation_sorted_order_number) 
     return true;
 }
 
-bool ReservationList::do_reservations_have_overlap(Reservation &reservation_1, Reservation &reservation_2) const {
+bool ReservationList::do_reservations_have_overlap(const Reservation &reservation_1, const Reservation &reservation_2) const {
     if (reservation_1.start_time < reservation_2.start_time && reservation_1.end_time < reservation_2.start_time ) {
         return false;
     }
@@ -168,35 +174,18 @@ bool ReservationList::do_reservations_have_overlap(Reservation &reservation_1, R
 std::string ReservationList::get_roomer_names(const std::string room_name, bool does_include_only_valid_roomers) const {
     std::ostringstream output_string_stream;
 
-    if (does_include_only_valid_roomers) {
-        for (
-            int valid_reservation_sorted_order_number = 1;
-            valid_reservation_sorted_order_number <= number_of_valid_reservations;
-            valid_reservation_sorted_order_number++
-        ) {
+    for_each_reservation(
+        [&](Reservation &reservation) {
             if (room_name.compare(
-                    valid_reservation_list[valid_reservation_sorted_order_number - 1]->reserved_room_name
+                    reservation.reserved_room_name
                 ) == 0
             ) {
-                output_string_stream << " " << valid_reservation_list[valid_reservation_sorted_order_number - 1]->name;
+                output_string_stream << " " << reservation.name;
             }
-        }
-    } else {
-        sort_ordered_reservation_order_number_list();
-
-        for (
-            int reservation_sorted_order_number = 1;
-            reservation_sorted_order_number <= total_number_of_reservations;
-            reservation_sorted_order_number++
-        ) {
-            if (room_name.compare(
-                    ordered_reservation_list[reservation_sorted_order_number - 1]->reserved_room_name
-                ) == 0
-            ) {
-                output_string_stream << " " << ordered_reservation_list[reservation_sorted_order_number - 1]->name;
-            }
-        }
-    }
+        },
+        true,
+        does_include_only_valid_roomers
+    );
 
     return output_string_stream.str();
 }
@@ -204,19 +193,19 @@ std::string ReservationList::get_roomer_names(const std::string room_name, bool 
 int ReservationList::get_room_earnings(const std::string room_name, const RoomList &room_list) const {
     int earnings = 0;
 
-    for (
-        int valid_reservation_sorted_order_number = 1;
-        valid_reservation_sorted_order_number <= number_of_valid_reservations;
-        valid_reservation_sorted_order_number++
-    ) {
-        if (room_name.compare(
-                valid_reservation_list[valid_reservation_sorted_order_number - 1]->reserved_room_name
-            ) == 0
-        ) {
-            int duration = valid_reservation_list[valid_reservation_sorted_order_number - 1]->end_time - valid_reservation_list[valid_reservation_sorted_order_number - 1]->start_time;
-            earnings += duration * room_list.get_price_per_hour(valid_reservation_list[valid_reservation_sorted_order_number - 1]->reserved_room_name);
-        }
-    }
+    for_each_reservation(
+        [&](Reservation &reservation) {
+            if (room_name.compare(
+                    reservation.reserved_room_name
+                ) == 0
+            ) {
+                int duration = reservation.end_time - reservation.start_time;
+                earnings += duration * room_list.get_price_per_hour(reservation.reserved_room_name);
+            }
+        },
+        true,
+        true
+    );
 
     return earnings;
 }

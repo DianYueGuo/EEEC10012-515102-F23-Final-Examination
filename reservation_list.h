@@ -2,6 +2,7 @@
 #define RESERVATION_LIST_H
 
 #include <string>
+#include <functional>
 #include "room_list.h"
 
 class RoomList;
@@ -39,9 +40,10 @@ private:
     int number_of_reservations_added;
     int number_of_valid_reservations;
     void sort_ordered_reservation_order_number_list() const;
-    bool is_reservation_valid(int reservation_sorted_order_number) const;
-    bool do_reservations_have_overlap(Reservation &reservation_1, Reservation &reservation_2) const;
+    bool is_reservation_valid(const Reservation &reservation_in_question) const;
+    bool do_reservations_have_overlap(const Reservation &reservation_1, const Reservation &reservation_2) const;
     std::string get_reservation_string(int reservation_order_number, const RoomList &room_list, bool does_calculate_total_cost = false) const;
+    void for_each_reservation(std::function<void(Reservation &reservation)> do_function, bool is_sorted_by_id = false, bool does_include_valid_reservation_only = false) const;
 };
 
 #endif
